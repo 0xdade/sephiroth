@@ -47,7 +47,7 @@ https://github.com/0xdade/sephiroth.
 
 ## Supported Servers
 
-* `nginx` - Makes use of nginx's "ngx_http_geo_module" which is installed by default on Ubuntu 18.10. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
+* `nginx` - Makes use of nginx's "ngx_http_geo_module" which is comes with the nginx package in Ubuntu 18.04. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
 
 ## Supported Cloud Providers
 
