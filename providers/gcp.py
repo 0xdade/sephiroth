@@ -1,4 +1,3 @@
-import requests
 import dns.resolver
 
 from .base_provider import BaseProvider
