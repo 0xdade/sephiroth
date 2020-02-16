@@ -24,9 +24,9 @@ $ pip install -r requirements.txt
 Sephiroth provides a built in help menu through the use of Python's argparse library. It tells you which commands are required, as well as other options.
 
 ```
-dade/Desktop/sephiroth via sephiroth
+sephiroth on  master [+] via sephiroth
 ➜ python sephiroth.py --help
-usage: Sephiroth [-h] -s {nginx} -c {aws} [-p] [--no-ipv6] [-V]
+usage: Sephiroth [-h] -s {nginx} -c {aws,azure,gcp} [-p] [--no-ipv6] [-V]
 
 Sephiroth is made to help block clouds.
 
@@ -34,8 +34,8 @@ optional arguments:
   -h, --help            show this help message and exit
   -s {nginx}, --server {nginx}
                         Type of server to build blocklist for
-  -c {aws}, --cloud {aws}
-                        Cloud provider to block
+  -c {aws,azure,gcp}, --cloud {aws,azure,gcp}
+                        Cloud provider(s) to block
   -p, --proxy           Using PROXY Protocol?
   --no-ipv6             Exclude ipv6 addresses from the block list where
                         applicable
@@ -48,13 +48,13 @@ https://github.com/0xdade/sephiroth.
 ## Example
 
 ```
-sephiroth on  master [!?] via sephiroth
-➜ python sephiroth.py -s nginx -c aws -p
-Your aws blocklist for nginx has been created: ./output/nginx_aws_2020-02-16_003003.conf
+sephiroth on  master [!] via sephiroth took 6s
+➜ python sephiroth.py -s nginx -c aws -c azure
+Your nginx blocklist for aws, azure can be found at ./output/nginx_aws_azure_2020-02-16_040129.conf
 
 Please add this line to /etc/nginx/nginx.conf before the Virtual Host Configs.
 
-        include /mnt/c/Users/dade/Desktop/sephiroth/output/nginx_aws_2020-02-16_003003.conf;
+        include /mnt/c/Users/dade/Desktop/sephiroth/output/nginx_aws_azure_2020-02-16_040129.conf;
 
 Then you can use the $block_ip variable in your site config like so:
 
@@ -70,7 +70,9 @@ Then you can use the $block_ip variable in your site config like so:
 
 ## Supported Cloud Providers
 
-* Amazon Web Services - `aws`
+* `aws` - Amazon Web Services. Obtained via the [documented download process](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html#aws-ip-download).
+* `azure` - Azure Cloud. Fetched via a two part process. Fetch the html of [the download page](https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519) and then parse the html to get the `failoverLink` anchor tag. That JSON is then downloaded.
+* `gcp` - Google Cloud Platform. Fetched via the absolutely insane abuse of spf records as outlined in the [docs](https://cloud.google.com/compute/docs/faq#find_ip_range).
 
 ## License
 

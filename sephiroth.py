@@ -21,7 +21,8 @@ supported_servers = [
 
 supported_clouds = [
 	"aws",
-	"azure"
+	"azure",
+	"gcp"
 ]
 
 base_dir = os.path.dirname(__file__)
@@ -92,7 +93,7 @@ def parse_args():
 	parser.add_argument(
 		"-c", 
 		"--cloud", 
-		help="Cloud provider to block",
+		help="Cloud provider(s) to block",
 		required=True,
 		choices=supported_clouds,
 		action='append',
