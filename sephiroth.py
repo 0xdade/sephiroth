@@ -24,6 +24,7 @@ supported_clouds = [
 base_dir = os.path.dirname(__file__)
 output_dir = os.path.join(base_dir, 'output')
 template_dir = os.path.join(base_dir, 'templates')
+help_templates_dir = os.path.join(template_dir, 'help')
 
 
 def get_output_path(servertype, provider, build_date):
@@ -102,6 +103,13 @@ def build_template(ranges, template, build_date, use_proxy=False):
 	)
 	return template_output
 
+def print_output(servertype, provider, outfile):
+	helpfile = os.path.join(help_templates_dir, servertype) + '.jinja'
+	abspath = os.path.abspath(outfile)
+	help_text = Template(open(helpfile).read()).render(provider=provider, servertype=servertype, outfile=outfile, abspath=abspath)
+	print(f"Your {provider} blocklist for {servertype} can be found at ./{outfile}\n")
+	print(help_text)
+
 def parse_args():
 	parser_desc = "Sephiroth is made to help block clouds."
 	parser_epilog = "For more information, assistance, or to submit a pull request, please visit https://github.com/0xdade/sephiroth."
@@ -157,6 +165,8 @@ def main():
 		Path(output_dir).mkdir()
 	with open(outfile, 'w') as o:
 		o.write(template_output)
+	
+	print_output(args.servertype, args.provider, outfile)
 
 if __name__ == "__main__":
 	main()

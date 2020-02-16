@@ -45,9 +45,27 @@ For more information, assistance, or to submit a pull request, please visit
 https://github.com/0xdade/sephiroth.
 ```
 
+## Example
+
+```
+sephiroth on  master [!?] via sephiroth
+➜ python sephiroth.py -s nginx -c aws -p
+Your aws blocklist for nginx has been created: ./output/nginx_aws_2020-02-16_003003.conf
+Please add this line to /etc/nginx/nginx.conf before the Virtual Host Configs.
+
+        include /mnt/c/Users/dade/Desktop/sephiroth/output/nginx_aws_2020-02-16_003003.conf;
+
+Then you can use the $block_ip variable in your site config like so:
+
+        if ($block_ip) {
+                return 302 https://example.com;
+        }
+```
+
+
 ## Supported Servers
 
-* `nginx` - Makes use of nginx's "ngx_http_geo_module" which is comes with the nginx package in Ubuntu 18.04. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
+* `nginx` - Makes use of nginx's "ngx_http_geo_module" which comes with the nginx package in Ubuntu 18.04. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
 
 ## Supported Cloud Providers
 
