@@ -11,6 +11,8 @@ from pathlib import Path
 import requests
 from jinja2 import Template
 
+from providers import Provider
+
 __author__ = "0xdade"
 SEPHIROTH_VERSION = "1.0"
 supported_servers = [
@@ -18,13 +20,13 @@ supported_servers = [
 ]
 
 supported_clouds = [
-	"aws"
+	"aws",
+	"azure"
 ]
 
 base_dir = os.path.dirname(__file__)
 output_dir = os.path.join(base_dir, 'output')
 template_dir = os.path.join(base_dir, 'templates')
-help_templates_dir = os.path.join(template_dir, 'help')
 
 
 def get_output_path(servertype, provider, build_date):
@@ -37,46 +39,9 @@ def get_output_path(servertype, provider, build_date):
 	return os.path.join(output_dir, fname)
 
 
-def download_aws_ranges():
-	'''
-	Input: None
-	Output: Dict representation of ip-ranges.json
-	'''
-	aws_ip_ranges_url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
-	r = requests.get(aws_ip_ranges_url)
-	return r.json()
-
-def process_aws_ranges(ranges, excludeip6=False):
-	''' 
-	Input: Dict of ip-ranges.json, optionally exclude ip6 ranges
-	Output: Dict with header_comments and list of dicts for ip ranges 
-	'''
-	header_comments = [
-		f"syncToken: {ranges['syncToken']}", 
-		f"createDate: {ranges['createDate']}"
-	]
-	out_ranges = []
-	source_prefixes = ranges['prefixes']
-	if not excludeip6:
-		source_prefixes += ranges['ipv6_prefixes']
-	
-	for prefix in source_prefixes:
-		if 'ipv6_prefix' in prefix:
-			item_prefix = prefix['ipv6_prefix']
-			iptype = "ipv6"
-		else:
-			item_prefix = prefix['ip_prefix']
-			iptype = "ipv4"
-		item = {"range": item_prefix, "comment": f"{iptype} {prefix['region']} {prefix['service']}" }
-		out_ranges.append(item)
-	
-	output = {"header_comments": header_comments, "ranges": out_ranges}
-	return output
-
-def get_ranges(provider, excludeip6):
-	if provider == 'aws':
-		awsranges = download_aws_ranges()
-		template_vars = process_aws_ranges(awsranges, excludeip6)
+def get_ranges(selected_provider, excludeip6):
+	provider = Provider(selected_provider)
+	template_vars = provider.get_processed_ranges()
 
 	return template_vars
 
@@ -85,7 +50,7 @@ def get_template(servertype):
 	Input: String name of server type
 	Output: Jinja2 template object for given server type
 	'''
-	fname = f"{servertype}.jinja"
+	fname = f"{servertype}/conf.jinja"
 	template_path = os.path.join(template_dir, fname)
 	template = Template(open(template_path).read())
 	return template
@@ -104,7 +69,7 @@ def build_template(ranges, template, build_date, use_proxy=False):
 	return template_output
 
 def print_output(servertype, provider, outfile):
-	helpfile = os.path.join(help_templates_dir, servertype) + '.jinja'
+	helpfile = os.path.join(template_dir, servertype, 'help.jinja')
 	abspath = os.path.abspath(outfile)
 	help_text = Template(open(helpfile).read()).render(provider=provider, servertype=servertype, outfile=outfile, abspath=abspath)
 	print(f"Your {provider} blocklist for {servertype} can be found at ./{outfile}\n")

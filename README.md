@@ -51,6 +51,7 @@ https://github.com/0xdade/sephiroth.
 sephiroth on  master [!?] via sephiroth
 ➜ python sephiroth.py -s nginx -c aws -p
 Your aws blocklist for nginx has been created: ./output/nginx_aws_2020-02-16_003003.conf
+
 Please add this line to /etc/nginx/nginx.conf before the Virtual Host Configs.
 
         include /mnt/c/Users/dade/Desktop/sephiroth/output/nginx_aws_2020-02-16_003003.conf;

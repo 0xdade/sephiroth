@@ -3,10 +3,10 @@
 # {{ comment }}
 {% endfor %}
 geo {% if use_proxy %}$proxy_protocol_addr {% endif %}$block_ip {
-    default 0;
-    {% for range in ranges -%}
-    {{ range.range }} 1; # {{ range.comment }}
-    {% endfor %}
+	default 0;
+	{% for range in ranges -%}
+	{{ range.range }} 1; # {{ range.comment }}
+	{% endfor %}
 }
 
 # Built by Sephiroth on {{ build_date }} (UTC)
