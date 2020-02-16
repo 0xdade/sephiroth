@@ -19,8 +19,8 @@ class Azure(BaseProvider):
 
 	def _process_ranges(self, excludeip6=False):
 		header_comments = [
-			f"changeNumber: {self.source_ranges['changeNumber']}", 
-			f"cloud: {self.source_ranges['cloud']}"
+			f"(azure) changeNumber: {self.source_ranges['changeNumber']}", 
+			f"(azure) cloud: {self.source_ranges['cloud']}"
 		]
 		out_ranges = []
 		for item in self.source_ranges['values']:

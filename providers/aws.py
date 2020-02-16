@@ -22,8 +22,8 @@ class AWS(BaseProvider):
 		Output: Dict with header_comments and list of dicts for ip ranges 
 		'''
 		header_comments = [
-			f"syncToken: {self.source_ranges['syncToken']}", 
-			f"createDate: {self.source_ranges['createDate']}"
+			f"(aws) syncToken: {self.source_ranges['syncToken']}", 
+			f"(aws) createDate: {self.source_ranges['createDate']}"
 		]
 		out_ranges = []
 		source_prefixes = self.source_ranges['prefixes']

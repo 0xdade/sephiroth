@@ -29,13 +29,14 @@ output_dir = os.path.join(base_dir, 'output')
 template_dir = os.path.join(base_dir, 'templates')
 
 
-def get_output_path(servertype, provider, build_date):
+def get_output_path(servertype, providers, build_date):
 	'''
 	Input: Server type, date from build_template(), cloud provider
 	Output: Path to file on disk to write to
 	'''
+	providers_str = '_'.join(providers)
 	fdate = build_date.strftime('%Y-%m-%d_%H%M%S')
-	fname = f"{servertype}_{provider}_{fdate}.conf"
+	fname = f"{servertype}_{providers_str}_{fdate}.conf"
 	return os.path.join(output_dir, fname)
 
 
@@ -68,11 +69,12 @@ def build_template(ranges, template, build_date, use_proxy=False):
 	)
 	return template_output
 
-def print_output(servertype, provider, outfile):
+def print_output(servertype, providers, outfile):
 	helpfile = os.path.join(template_dir, servertype, 'help.jinja')
 	abspath = os.path.abspath(outfile)
-	help_text = Template(open(helpfile).read()).render(provider=provider, servertype=servertype, outfile=outfile, abspath=abspath)
-	print(f"Your {provider} blocklist for {servertype} can be found at ./{outfile}\n")
+	providers_str = ', '.join(providers)
+	help_text = Template(open(helpfile).read()).render(abspath=abspath)
+	print(f"Your {servertype} blocklist for {providers_str} can be found at ./{outfile}\n")
 	print(help_text)
 
 def parse_args():
@@ -93,7 +95,8 @@ def parse_args():
 		help="Cloud provider to block",
 		required=True,
 		choices=supported_clouds,
-		dest='provider'
+		action='append',
+		dest='providers'
 	)
 	parser.add_argument(
 		"-p", 
@@ -122,16 +125,20 @@ def parse_args():
 def main():
 	args = parse_args()
 	build_date = datetime.utcnow()
-	template_vars = get_ranges(args.provider, args.excludeip6)
+	template_vars = {"header_comments": [], "ranges": []}
+	for provider in args.providers:
+		provider_vars = get_ranges(provider, args.excludeip6)
+		template_vars['header_comments'] += provider_vars['header_comments']
+		template_vars['ranges'] += provider_vars['ranges']
 	template = get_template(args.servertype)
 	template_output = build_template(template_vars, template, build_date, args.use_proxy)
-	outfile = get_output_path(args.servertype, args.provider, build_date)
+	outfile = get_output_path(args.servertype, args.providers, build_date)
 	if not Path(output_dir).exists():
 		Path(output_dir).mkdir()
 	with open(outfile, 'w') as o:
 		o.write(template_output)
 	
-	print_output(args.servertype, args.provider, outfile)
+	print_output(args.servertype, args.providers, outfile)
 
 if __name__ == "__main__":
 	main()
