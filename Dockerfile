@@ -6,7 +6,7 @@ LABEL gitrepo="https://github.com/0xdade/sephiroth"
 # docker build --tag=sephiroth .
 
 # Run:
-# docker run --rm -it -v $(pwd):/app/output sephiroth -s nginx -c aws
+# docker run --rm -v $(pwd):/app/output sephiroth -s nginx -c aws
 
 WORKDIR /app
 COPY LICENSE requirements.txt /app/
@@ -16,7 +16,7 @@ COPY templates /app/templates
 COPY providers /app/providers
 COPY sephiroth.py .
 RUN chmod +x sephiroth.py && \
-    sed -i 's/\r//' sephiroth.py # remove windows line endings
+    sed -i 's/\r//' sephiroth.py
 
 VOLUME /app/output
 ENTRYPOINT [ "./sephiroth.py"]
