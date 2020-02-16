@@ -22,7 +22,8 @@ supported_servers = [
 supported_clouds = [
 	"aws",
 	"azure",
-	"gcp"
+	"gcp",
+	"oci"
 ]
 
 base_dir = os.path.dirname(__file__)
