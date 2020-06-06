@@ -14,22 +14,22 @@ from jinja2 import Template
 from providers import Provider
 
 __author__ = "0xdade"
-SEPHIROTH_VERSION = "1.0"
+SEPHIROTH_VERSION = "1.1"
 supported_servers = [
-	"nginx"
+	"nginx",
+	'apache'
 ]
 
 supported_clouds = [
 	"aws",
 	"azure",
-	"gcp",
-	"oci"
+	"gcp"
+	#"oci"
 ]
 
 base_dir = os.path.dirname(__file__)
 output_dir = os.path.join(base_dir, 'output')
 template_dir = os.path.join(base_dir, 'templates')
-
 
 def get_output_path(servertype, providers, build_date):
 	'''
@@ -38,7 +38,7 @@ def get_output_path(servertype, providers, build_date):
 	'''
 	providers_str = '_'.join(providers)
 	fdate = build_date.strftime('%Y-%m-%d_%H%M%S')
-	fname = f"{servertype}_{providers_str}_{fdate}.conf"
+	fname = f"{fdate}_{servertype}_{providers_str}.conf"
 	return os.path.join(output_dir, fname)
 
 
@@ -58,7 +58,7 @@ def get_template(servertype):
 	template = Template(open(template_path).read())
 	return template
 
-def build_template(ranges, template, build_date, use_proxy=False):
+def build_template(ranges, template, build_date, use_proxy=False, redir_target=''):
 	'''
 	Input: output of process_<provider>_ranges(), output of get_template()
 	Output: Rendered template string ready to write to disk
@@ -67,7 +67,8 @@ def build_template(ranges, template, build_date, use_proxy=False):
 		ranges=ranges['ranges'],
 		header_comments=ranges['header_comments'],
 		build_date=build_date,
-		use_proxy=use_proxy
+		use_proxy=use_proxy,
+		redir_target=redir_target
 	)
 	return template_output
 
@@ -75,9 +76,25 @@ def print_output(servertype, providers, outfile):
 	helpfile = os.path.join(template_dir, servertype, 'help.jinja')
 	abspath = os.path.abspath(outfile)
 	providers_str = ', '.join(providers)
-	help_text = Template(open(helpfile).read()).render(abspath=abspath)
-	print(f"Your {servertype} blocklist for {providers_str} can be found at ./{outfile}\n")
+	help_text = Template(open(helpfile).read()).render(abspath=abspath, outfile=os.path.basename(outfile))
+	print(f"Your {servertype} blocklist for {providers_str} can be found at {outfile}\n")
 	print(help_text)
+
+def validate_nginx_args(args):
+	if args.redir_target:
+		print("[?] Warning: We cannot generate nginx configs with redirect targets at this time. Ignoring.")
+	return True
+
+def validate_apache_args(args):
+	if args.use_proxy:
+		print("[?] Warning: We cannot use PROXY protocol with Apache at this time. Ignoring.")
+	if args.redir_target is None:
+		print("[!] Error: Apache requires a defined redirect target using -r")
+		raise SystemExit
+	elif args.redir_target.startswith('http://') or args.redir_target.startswith('https://'):
+		print("[!] Error: Redirect target should not include scheme. Please edit the output RewriteRule directly if you want to change this.")
+		raise SystemExit
+	return True
 
 def parse_args():
 	parser_desc = "Sephiroth is made to help block clouds."
@@ -101,9 +118,16 @@ def parse_args():
 		dest='providers'
 	)
 	parser.add_argument(
+		"-r", 
+		"--redir", 
+		help="Place to redirect requests to. (apache)",
+		default=None,
+		dest='redir_target'
+	)
+	parser.add_argument(
 		"-p", 
 		"--proxy", 
-		help="Using PROXY Protocol?",
+		help="Using PROXY Protocol? (nginx)",
 		default=False,
 		action='store_true',
 		dest='use_proxy'
@@ -122,10 +146,17 @@ def parse_args():
 		version="%(prog)s " + SEPHIROTH_VERSION
 	)
 	args = parser.parse_args()
+
 	return args
+
+arg_validators = {
+	'apache': validate_apache_args,
+	'nginx': validate_nginx_args
+}
 
 def main():
 	args = parse_args()
+	arg_validators[args.servertype](args)
 	build_date = datetime.utcnow()
 	template_vars = {"header_comments": [], "ranges": []}
 	for provider in args.providers:
@@ -133,7 +164,7 @@ def main():
 		template_vars['header_comments'] += provider_vars['header_comments']
 		template_vars['ranges'] += provider_vars['ranges']
 	template = get_template(args.servertype)
-	template_output = build_template(template_vars, template, build_date, args.use_proxy)
+	template_output = build_template(template_vars, template, build_date, args.use_proxy, args.redir_target)
 	outfile = get_output_path(args.servertype, args.providers, build_date)
 	if not Path(output_dir).exists():
 		Path(output_dir).mkdir()
