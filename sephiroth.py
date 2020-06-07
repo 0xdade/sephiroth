@@ -14,7 +14,7 @@ from jinja2 import Template
 from providers import Provider
 
 __author__ = "0xdade"
-SEPHIROTH_VERSION = "1.1"
+SEPHIROTH_VERSION = "1.0"
 supported_servers = [
 	"nginx",
 	'apache',
@@ -26,7 +26,8 @@ supported_targets = [
 	"aws",
 	"azure",
 	"gcp",
-	"asn"
+	"asn",
+	'file'
 	#"oci"
 ]
 
@@ -46,6 +47,11 @@ def get_output_path(servertype, targets, build_date):
 
 
 def get_ranges(selected_provider, excludeip6=False, targets_in=None):
+	'''
+	Input: Type of provider to target, as defined in supported_targets. 
+		   Optionally exclude ip6, provide list of asns or files if asn or file target
+	Output: Structured data ready to go to templates
+	'''
 	if targets_in:
 		provider = Provider(selected_provider, targets_in)
 	else:
@@ -140,6 +146,14 @@ def parse_args():
 		dest="asns"
 	)
 	parser.add_argument(
+		"-f",
+		"--file",
+		help="Files to block addresses from",
+		action='append',
+		metavar='FILENAME',
+		dest="files"
+	)
+	parser.add_argument(
 		"-r", 
 		"--redir", 
 		help="Place to redirect requests to. (apache)",
@@ -171,6 +185,17 @@ def parse_args():
 
 	return args
 
+def validate_targets(args):
+	success = True
+	for target in args.targets:
+		if target == 'asn' and not args.asns:
+			print("[!] Error: Cannot specify -t asn without including at least one -a AS####")
+			success = False
+		elif target == 'file' and not args.files:
+			print("[!] Error: Cannot specify -t file without including at least one -f filename.txt")
+			success = False
+	return success
+
 server_validators = {
 	'apache': validate_apache_args,
 	'nginx': validate_nginx_args,
@@ -180,13 +205,17 @@ server_validators = {
 
 def main():
 	args = parse_args()
+	if not validate_targets(args):
+		raise SystemExit
 	if args.servertype in server_validators:
 		server_validators[args.servertype](args)
 	build_date = datetime.utcnow()
 	template_vars = {"header_comments": [], "ranges": []}
 	for provider in args.targets:
-		if args.asns:
+		if args.asns and provider == 'asn':
 			provider_vars = get_ranges(provider, excludeip6=args.excludeip6, targets_in=args.asns)
+		elif args.files and provider == 'file':
+			provider_vars = get_ranges(provider, excludeip6=args.excludeip6, targets_in=args.files)
 		else:
 			provider_vars = get_ranges(provider, excludeip6=args.excludeip6)
 		template_vars['header_comments'] += provider_vars['header_comments']

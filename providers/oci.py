@@ -13,8 +13,8 @@ class OCI(BaseProvider):
 		Output: Dict representation of ip-ranges.json
 		'''
 		print(f"(oci) Fetching IP ranges from Oracle")
-		aws_ip_ranges_url = "https://docs.cloud.oracle.com/en-us/iaas/tools/public_ip_ranges.json"
-		r = requests.get(aws_ip_ranges_url)
+		oci_ip_ranges_url = "https://docs.cloud.oracle.com/en-us/iaas/tools/public_ip_ranges.json"
+		r = requests.get(oci_ip_ranges_url)
 		return r.json()
 
 	def _process_ranges(self, excludeip6=False):

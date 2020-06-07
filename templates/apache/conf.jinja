@@ -10,7 +10,8 @@ RewriteEngine On
 RewriteOptions Inherit
 
 {% for range in ranges -%}
-RewriteCond	expr	"-R '{{ range.range }}'" {% if not loop.last %}[OR]{% endif %} # {{ range.comment }}
+
+{% if loop.last %}# (For the below line) {{ range.comment + '\n' }}{% endif %}RewriteCond	expr	"-R '{{ range.range }}'" {% if not loop.last %}[OR] # {{ range.comment }}{% endif %} 
 {% endfor %}
 RewriteRule	^.*$	{{ '%{REQUEST_SCHEME}://${REDIR_TARGET} [L,R=302]' }}
 

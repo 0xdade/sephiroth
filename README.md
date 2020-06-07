@@ -27,8 +27,8 @@ Sephiroth provides a built in help menu through the use of Python's argparse lib
 sephiroth on  master [!?] on 🐳 v19.03.8 via sephiroth
 ➜ python sephiroth.py --help
 usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t
-                 {aws,azure,gcp,asn} [-a ASN] [-r REDIR_TARGET] [-p]
-                 [--no-ipv6] [-V]
+                 {aws,azure,gcp,asn,file} [-a ASN] [-f FILENAME]
+                 [-r REDIR_TARGET] [-p] [--no-ipv6] [-V]
 
 Sephiroth is made to help block clouds.
 
@@ -36,9 +36,11 @@ optional arguments:
   -h, --help            show this help message and exit
   -s {nginx,apache,iptables,ip6tables}, --server {nginx,apache,iptables,ip6tables}
                         Type of server to build blocklist for
-  -t {aws,azure,gcp,asn}, --target {aws,azure,gcp,asn}
+  -t {aws,azure,gcp,asn,file}, --target {aws,azure,gcp,asn,file}
                         Targets to block
   -a ASN, --asn ASN     ASN to block in AS#### format
+  -f FILENAME, --file FILENAME
+                        Files to block addresses from
   -r REDIR_TARGET, --redir REDIR_TARGET
                         Place to redirect requests to. (apache)
   -p, --proxy           Using PROXY Protocol? (nginx)
@@ -86,6 +88,7 @@ Then you can use the $block_ip variable in your site config like so:
 * `gcp` - Google Cloud Platform. Fetched via the absolutely insane abuse of spf records as outlined in the [docs](https://cloud.google.com/compute/docs/faq#find_ip_range).
 * (DISABLED) `oci` - Oracle Cloud Infrastructure. Fetched via the [documented download process](https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/addressranges.htm) - KNOWN BUG SEE [#11](https://github.com/0xdade/sephiroth/issues/11)
 * `asn` - Lookup IP ranges by ASN. Uses [Hackertarget](https://hackertarget.com/as-ip-lookup/) API to make fetching results painless. Limited to 100 ASN lookups per day per source IP.
+* `file` - Read line-separated list of addresses from one or more files. Lines that begin with # are ignored and lines that contain a # after the address save the comment into the output.
 
 ## Acknowledgements
 

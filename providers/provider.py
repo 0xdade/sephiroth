@@ -1,11 +1,12 @@
-from . import AWS, Azure, GCP, OCI, ASN
+from . import AWS, Azure, GCP, OCI, ASN, File
 
 classmap = {
 	"aws": AWS,
 	"azure": Azure,
 	"gcp": GCP,
 	"oci": OCI,
-	'asn': ASN
+	'asn': ASN,
+	'file': File
 }
 
 class Provider():
