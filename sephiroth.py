@@ -17,7 +17,9 @@ __author__ = "0xdade"
 SEPHIROTH_VERSION = "1.1"
 supported_servers = [
 	"nginx",
-	'apache'
+	'apache',
+	'iptables',
+	'ip6tables'
 ]
 
 supported_targets = [
@@ -100,6 +102,14 @@ def validate_apache_args(args):
 		raise SystemExit
 	return True
 
+def validate_iptables_args(args):
+	print("[?] Warning: iptables rules automatically exclude any IPv6 addresses")
+	return True
+
+def validate_ip6tables_args(args):
+	print("[?] Warning: ip6tables rules automatically exclude any IPv4 addresses")
+	return True
+
 def parse_args():
 	parser_desc = "Sephiroth is made to help block clouds."
 	parser_epilog = "For more information, assistance, or to submit a pull request, please visit https://github.com/0xdade/sephiroth."
@@ -163,12 +173,15 @@ def parse_args():
 
 server_validators = {
 	'apache': validate_apache_args,
-	'nginx': validate_nginx_args
+	'nginx': validate_nginx_args,
+	'iptables': validate_iptables_args,
+	'ip6tables': validate_ip6tables_args
 }
 
 def main():
 	args = parse_args()
-	server_validators[args.servertype](args)
+	if args.servertype in server_validators:
+		server_validators[args.servertype](args)
 	build_date = datetime.utcnow()
 	template_vars = {"header_comments": [], "ranges": []}
 	for provider in args.targets:
