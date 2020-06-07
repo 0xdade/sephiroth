@@ -40,6 +40,7 @@ class GCP(BaseProvider):
 
 
 	def _get_ranges(self):
+		print(f"(gcp) Fetching IP ranges from Google")
 		base_txt_record = "_cloud-netblocks.googleusercontent.com"
 		self._get_netblocks(base_txt_record)
 		return self.seen_netblocks

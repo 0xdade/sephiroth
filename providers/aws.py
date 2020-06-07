@@ -12,6 +12,7 @@ class AWS(BaseProvider):
 		Input: None
 		Output: Dict representation of ip-ranges.json
 		'''
+		print(f"(aws) Fetching IP ranges from Amazon")
 		aws_ip_ranges_url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
 		r = requests.get(aws_ip_ranges_url)
 		return r.json()

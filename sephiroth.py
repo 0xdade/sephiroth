@@ -20,10 +20,11 @@ supported_servers = [
 	'apache'
 ]
 
-supported_clouds = [
+supported_targets = [
 	"aws",
 	"azure",
-	"gcp"
+	"gcp",
+	"asn"
 	#"oci"
 ]
 
@@ -31,19 +32,22 @@ base_dir = os.path.dirname(__file__)
 output_dir = os.path.join(base_dir, 'output')
 template_dir = os.path.join(base_dir, 'templates')
 
-def get_output_path(servertype, providers, build_date):
+def get_output_path(servertype, targets, build_date):
 	'''
 	Input: Server type, date from build_template(), cloud provider
 	Output: Path to file on disk to write to
 	'''
-	providers_str = '_'.join(providers)
+	targets_str = '_'.join(targets)
 	fdate = build_date.strftime('%Y-%m-%d_%H%M%S')
-	fname = f"{fdate}_{servertype}_{providers_str}.conf"
+	fname = f"{fdate}_{servertype}_{targets_str}.conf"
 	return os.path.join(output_dir, fname)
 
 
-def get_ranges(selected_provider, excludeip6):
-	provider = Provider(selected_provider)
+def get_ranges(selected_provider, excludeip6=False, targets_in=None):
+	if targets_in:
+		provider = Provider(selected_provider, targets_in)
+	else:
+		provider = Provider(selected_provider)
 	template_vars = provider.get_processed_ranges()
 
 	return template_vars
@@ -72,12 +76,12 @@ def build_template(ranges, template, build_date, use_proxy=False, redir_target='
 	)
 	return template_output
 
-def print_output(servertype, providers, outfile):
+def print_output(servertype, targets, outfile):
 	helpfile = os.path.join(template_dir, servertype, 'help.jinja')
 	abspath = os.path.abspath(outfile)
-	providers_str = ', '.join(providers)
+	targets_str = ', '.join(targets)
 	help_text = Template(open(helpfile).read()).render(abspath=abspath, outfile=os.path.basename(outfile))
-	print(f"Your {servertype} blocklist for {providers_str} can be found at {outfile}\n")
+	print(f"Your {servertype} blocklist for {targets_str} can be found at {outfile}\n")
 	print(help_text)
 
 def validate_nginx_args(args):
@@ -109,13 +113,21 @@ def parse_args():
 		dest='servertype'
 	)
 	parser.add_argument(
-		"-c", 
-		"--cloud", 
-		help="Cloud provider(s) to block",
+		"-t", 
+		"--target", 
+		help="Targets to block",
 		required=True,
-		choices=supported_clouds,
+		choices=supported_targets,
 		action='append',
-		dest='providers'
+		dest='targets'
+	)
+	parser.add_argument(
+		"-a",
+		"--asn",
+		help="ASN to block in AS#### format",
+		action='append',
+		metavar='ASN',
+		dest="asns"
 	)
 	parser.add_argument(
 		"-r", 
@@ -149,29 +161,32 @@ def parse_args():
 
 	return args
 
-arg_validators = {
+server_validators = {
 	'apache': validate_apache_args,
 	'nginx': validate_nginx_args
 }
 
 def main():
 	args = parse_args()
-	arg_validators[args.servertype](args)
+	server_validators[args.servertype](args)
 	build_date = datetime.utcnow()
 	template_vars = {"header_comments": [], "ranges": []}
-	for provider in args.providers:
-		provider_vars = get_ranges(provider, args.excludeip6)
+	for provider in args.targets:
+		if args.asns:
+			provider_vars = get_ranges(provider, excludeip6=args.excludeip6, targets_in=args.asns)
+		else:
+			provider_vars = get_ranges(provider, excludeip6=args.excludeip6)
 		template_vars['header_comments'] += provider_vars['header_comments']
 		template_vars['ranges'] += provider_vars['ranges']
 	template = get_template(args.servertype)
 	template_output = build_template(template_vars, template, build_date, args.use_proxy, args.redir_target)
-	outfile = get_output_path(args.servertype, args.providers, build_date)
+	outfile = get_output_path(args.servertype, args.targets, build_date)
 	if not Path(output_dir).exists():
 		Path(output_dir).mkdir()
 	with open(outfile, 'w') as o:
 		o.write(template_output)
 	
-	print_output(args.servertype, args.providers, outfile)
+	print_output(args.servertype, args.targets, outfile)
 
 if __name__ == "__main__":
 	main()

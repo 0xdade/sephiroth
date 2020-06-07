@@ -10,6 +10,7 @@ class Azure(BaseProvider):
 		self.processed_ranges = self._process_ranges(excludeip6)
 
 	def _get_ranges(self):
+		print(f"(azure) Fetching IP ranges from Microsoft")
 		azure_download_page = "https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519"
 		r = requests.get(azure_download_page)
 		soup = BeautifulSoup(r.content, 'html.parser')
