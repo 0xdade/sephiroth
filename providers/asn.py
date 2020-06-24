@@ -9,7 +9,7 @@ class ASN(BaseProvider):
 
 	def _get_ranges(self, asns):
 		'''
-		Input: None
+		Input: List of ASNs in AS#### format
 		Output: Dict representation of ip-ranges.json
 		'''
 		ranges = {}

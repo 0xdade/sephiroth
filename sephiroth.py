@@ -27,8 +27,8 @@ supported_targets = [
 	"azure",
 	"gcp",
 	"asn",
-	'file'
-	#"oci"
+	'file',
+	"oci"
 ]
 
 base_dir = os.path.dirname(__file__)
