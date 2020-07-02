@@ -1,4 +1,4 @@
-from . import AWS, Azure, GCP, OCI, ASN, File
+from . import AWS, Azure, GCP, OCI, ASN, File, Tor
 
 classmap = {
 	"aws": AWS,
@@ -6,7 +6,8 @@ classmap = {
 	"gcp": GCP,
 	"oci": OCI,
 	'asn': ASN,
-	'file': File
+	'file': File,
+	'tor': Tor
 }
 
 class Provider():

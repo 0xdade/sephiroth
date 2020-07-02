@@ -28,7 +28,8 @@ supported_targets = [
 	"gcp",
 	"asn",
 	'file',
-	"oci"
+	"oci",
+	'tor'
 ]
 
 base_dir = os.path.dirname(__file__)
