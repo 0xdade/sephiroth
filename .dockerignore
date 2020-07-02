@@ -1,0 +1,6 @@
+output/
+build/
+dist/
+.venv/
+sephiroth.egg-info/
+MANIFEST.in

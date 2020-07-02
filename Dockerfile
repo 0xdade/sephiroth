@@ -1,4 +1,4 @@
-FROM docker.io/python:3.8.1-buster
+FROM python:3.8
 
 LABEL gitrepo="https://github.com/0xdade/sephiroth"
 
@@ -6,17 +6,15 @@ LABEL gitrepo="https://github.com/0xdade/sephiroth"
 # docker build --tag=sephiroth .
 
 # Run:
-# docker run --rm -v $(pwd):/app/output sephiroth -s nginx -c aws
+# docker run --rm -v $(pwd):/app/output sephiroth -s nginx -t aws
 
 WORKDIR /app
-COPY LICENSE requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+COPY LICENSE Pipfile Pipfile.lock /app/
+RUN pip install --no-cache-dir pipenv \
+    && PIPENV_VENV_IN_PROJECT=1 pipenv sync
 
-COPY templates /app/templates
-COPY providers /app/providers
-COPY sephiroth.py .
-RUN chmod +x sephiroth.py && \
-    sed -i 's/\r//' sephiroth.py
+COPY sephiroth/ /app/sephiroth
+COPY Sephiroth.py .
 
 VOLUME /app/output
-ENTRYPOINT [ "./sephiroth.py"]
+ENTRYPOINT [ "pipenv", "run", "python", "Sephiroth.py"]

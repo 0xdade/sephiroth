@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
 import argparse
+from datetime import datetime
 import os
 from pathlib import Path
 
-import requests
 from jinja2 import Template
+import requests
 
 from sephiroth.providers import Provider
 import sephiroth
