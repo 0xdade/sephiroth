@@ -1,9 +1,0 @@
-Please add this line to /etc/nginx/nginx.conf before the Virtual Host Configs.
-
-	include {{ abspath }};
-
-Then you can use the $block_ip variable in your site config like so:
-
-	if ($block_ip) {
-		return 302 https://example.com;
-	}

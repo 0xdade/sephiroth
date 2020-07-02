@@ -1,0 +1,13 @@
+ip6tables-save file generated at:
+                               
+    {{ abspath }}
+
+You can tell iptables to use these rules with iptables-restore:
+
+    ip6tables-restore --noflush < {{ abspath }}
+
+WARNING: If you do not include --noflush, you are very likely to lock yourself out of your system.
+
+Once you've added these rules and tested them, save your new complete set of rules with ip6tables-save:
+
+    ip6tables-save > /etc/ip6tables.rules

@@ -1,0 +1,18 @@
+# Built by Sephiroth on {{ build_date }} (UTC)
+{% for comment in header_comments -%}
+# {{ comment }}
+{% endfor %}
+
+# If making manual redirect modifications, change this value
+Define REDIR_TARGET {{ redir_target }}
+
+RewriteEngine On
+RewriteOptions Inherit
+
+{% for range in ranges -%}
+
+{% if loop.last %}# (For the below line) {{ range.comment + '\n' }}{% endif %}RewriteCond    expr    "-R '{{ range.range }}'" {% if not loop.last %}[OR] # {{ range.comment }}{% endif %}                            
+{% endfor %}
+RewriteRule    ^.*$    {{ '%{REQUEST_SCHEME}://${REDIR_TARGET} [L,R=302]' }}
+
+# Built by Sephiroth on {{ build_date }} (UTC)

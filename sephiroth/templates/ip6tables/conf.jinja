@@ -1,0 +1,11 @@
+# Built by Sephiroth on {{ build_date }} (UTC)
+{% for comment in header_comments -%}
+# {{ comment }}
+{% endfor %}
+*filter
+{% for range in ranges if not '.' in range.range -%}
+-A INPUT -s {{ range.range }} -j DROP -m comment --comment "{{ range.comment }}"
+{% endfor %}
+
+COMMIT
+# Built by Sephiroth on {{ build_date }} (UTC)
