@@ -43,5 +43,4 @@ class File(BaseProvider):
 
                 item = {"range": ip_addr, "comment": f"{fname} {comment}"}
                 out_ranges.append(item)
-        output = {"header_comments": header_comments, "ranges": out_ranges}
-        return output
+        return {"header_comments": header_comments, "ranges": out_ranges}

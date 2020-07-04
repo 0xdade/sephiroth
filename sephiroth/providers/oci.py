@@ -38,5 +38,4 @@ class OCI(BaseProvider):
                 }
                 out_ranges.append(item)
 
-        output = {"header_comments": header_comments, "ranges": out_ranges}
-        return output
+        return {"header_comments": header_comments, "ranges": out_ranges}

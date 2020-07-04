@@ -41,9 +41,7 @@ def get_ranges(selected_provider, excludeip6=False, targets_in=None):
         provider = Provider(selected_provider, targets_in)
     else:
         provider = Provider(selected_provider)
-    template_vars = provider.get_processed_ranges()
-
-    return template_vars
+    return provider.get_processed_ranges()
 
 
 def get_template(servertype):
@@ -53,8 +51,7 @@ def get_template(servertype):
     """
     fname = f"{servertype}/conf.jinja"
     template_path = os.path.join(template_dir, fname)
-    template = Template(open(template_path).read())
-    return template
+    return Template(open(template_path).read())
 
 
 def build_template(ranges, template, build_date, use_proxy=False, redir_target=""):
@@ -62,14 +59,13 @@ def build_template(ranges, template, build_date, use_proxy=False, redir_target="
     Input: output of process_<provider>_ranges(), output of get_template()
     Output: Rendered template string ready to write to disk
     """
-    template_output = template.render(
+    return template.render(
         ranges=ranges["ranges"],
         header_comments=ranges["header_comments"],
         build_date=build_date,
         use_proxy=use_proxy,
         redir_target=redir_target,
     )
-    return template_output
 
 
 def print_output(servertype, targets, outfile):
@@ -183,9 +179,7 @@ def parse_args():
     parser.add_argument(
         "-V", "--version", action="version", version="%(prog)s " + sephiroth.__version__
     )
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
 
 def validate_targets(args):

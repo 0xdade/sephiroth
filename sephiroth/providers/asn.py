@@ -36,5 +36,4 @@ class ASN(BaseProvider):
                     continue
                 item = {"range": ip_range, "comment": f"{asn}"}
                 out_ranges.append(item)
-        output = {"header_comments": header_comments, "ranges": out_ranges}
-        return output
+        return {"header_comments": header_comments, "ranges": out_ranges}
