@@ -33,5 +33,4 @@ class Azure(BaseProvider):
                 out_item = {"range": addr, "comment": f"{platform} {name}"}
                 out_ranges.append(out_item)
 
-        output = {"header_comments": header_comments, "ranges": out_ranges}
-        return output
+        return {"header_comments": header_comments, "ranges": out_ranges}
