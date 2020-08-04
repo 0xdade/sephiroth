@@ -8,6 +8,8 @@ A Python3 script to build cloud block lists for servers.
 
 ## Setup
 
+
+### Python
 It is recommended to install sephiroth into a virtual environment. From a brand new Ubuntu 18.04 machine, the setup flow should look something like this:
 
 ```bash
@@ -16,12 +18,21 @@ mkdir sephiroth && cd sephiroth
 pipenv install sephiroth
 ```
 
-Alternatively you can get it directly from the repository for the always-latest updates.
+You can also get the always-latest updates by cloning directly from the repository.
 
 ```bash
 git clone https://github.com/0xdade/sephiroth.git
 cd sephiroth
 pipenv install .
+```
+
+### Docker
+
+Alternatively, we provide a [Dockerfile](/Dockerfile) with build and run instructions, or you can fetch the latest version from [dockerhub](https://hub.docker.com/r/0xdade/sephiroth):
+
+```bash
+docker pull 0xdade/sephiroth
+docker run --rm -v $(pwd):/app/output sephiroth -s nginx -t gcp
 ```
 
 ## Usage
@@ -81,17 +92,19 @@ Then you can use the $block_ip variable in your site config like so:
 
 ## Supported Servers
 
-* `nginx` - Makes use of nginx's "ngx_http_geo_module" which comes with the nginx package in Ubuntu 18.04. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
+* `nginx` - Makes use of nginx's `ngx_http_geo_module` which comes with the nginx package in Ubuntu 18.04. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
 * `apache` - Generates a mod_rewrite rule set to do conditional redirects based on cloud ip ranges. Does not (to my knowledge) support `proxy_protocol` usage. Requires `-r REDIR_TARGET` for the RewriteRule
 * `iptables` - Generates a set of iptables DROP rules to block access from listed IPv4 ranges.
 * `ip6tables` - Generates a set of ip6tables DROP rules to block access from listed IPv6 ranges.
 
-## Supported Cloud Providers
+## Supported Providers
+
+While Sephiroth began as a cloud blocking script, it became apparent that there were plenty of other sources of ip addresses that might be useful, and so we expanded. This is the list of currently supported providers.
 
 * `aws` - Amazon Web Services. Obtained via the [documented download process](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html#aws-ip-download).
 * `azure` - Azure Cloud. Fetched via a two part process. Fetch the html of [the download page](https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519) and then parse the html to get the `failoverLink` anchor tag. That JSON is then downloaded.
-* `gcp` - Google Cloud Platform. Fetched via the absolutely insane abuse of spf records as outlined in the [docs](https://cloud.google.com/compute/docs/faq#find_ip_range).
-* `oci` - Oracle Cloud Infrastructure. Fetched via the [documented download process](https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/addressranges.htm) - KNOWN BUG SEE [#11](https://github.com/0xdade/sephiroth/issues/11)
+* `gcp` - Google Cloud Platform. Fetches the `cloud.json` as documented via the [docs](https://cloud.google.com/compute/docs/faq#find_ip_range).
+* `oci` - Oracle Cloud Infrastructure. Fetched via the [documented download process](https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/addressranges.htm)
 * `asn` - Lookup IP ranges by ASN. Uses [Hackertarget](https://hackertarget.com/as-ip-lookup/) API to make fetching results painless. Limited to 100 ASN lookups per day per source IP.
 * `file` - Read line-separated list of addresses from one or more files. Lines that begin with # are ignored and lines that contain a # after the address save the comment into the output.
 * `tor` - Fetch the bulk list of Tor exit nodes from the torproject.org website and add them to the list.

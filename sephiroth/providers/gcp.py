@@ -1,56 +1,46 @@
-import dns.resolver
-
+import requests
 from sephiroth.providers.base_provider import BaseProvider
-
-"""
-I know this probably looks ridiculous. But it's literally what they expect people to do.
-https://cloud.google.com/compute/docs/faq#find_ip_range
-"""
 
 
 class GCP(BaseProvider):
     def __init__(self, excludeip6=False):
-        self.seen_netblocks = set()
-        self.seen_txt_records = set()
         self.source_ranges = self._get_ranges()
         self.processed_ranges = self._process_ranges(excludeip6)
 
-    def _parse_txt(self, txt):
-        record = {"includes": [], "ip_ranges": []}
-        for entry in txt.split(" "):
-            if entry.startswith("include") and ":" in entry:
-                record["includes"].append(entry.split(":")[1])
-            elif entry.startswith("ip4") and ":" in entry:
-                record["ip_ranges"].append(entry.split(":")[1])
-        return record
-
-    def _get_netblocks(self, query):
-        if query in self.seen_txt_records:
-            return
-        answer = dns.resolver.query(query, "TXT")
-        answers = [txt.to_text() for txt in answer]
-        for txt in answers:
-            record = self._parse_txt(txt)
-        for include in record["includes"]:
-            self._get_netblocks(include)
-        for ip_range in record["ip_ranges"]:
-            if ip_range not in self.seen_netblocks:
-                self.seen_netblocks.add(ip_range)
-        self.seen_txt_records.add(query)
-
     def _get_ranges(self):
+        """
+        Input: None
+        Output: Dict representation of cloud.json
+        """
         print("(gcp) Fetching IP ranges from Google")
-        base_txt_record = "_cloud-netblocks.googleusercontent.com"
-        self._get_netblocks(base_txt_record)
-        return self.seen_netblocks
+        gcp_ip_ranges_url = "http://www.gstatic.com/ipranges/cloud.json"
+        r = requests.get(gcp_ip_ranges_url)
+        return r.json()
 
     def _process_ranges(self, excludeip6=False):
+        """
+        Input: Dict of cloud.json, optionally exclude ip6 ranges
+        Output: Dict with header_comments and list of dicts for ip ranges
+        """
         header_comments = [
-            f"(gcp) _cloud-netblocks count: {len(self.seen_txt_records)}"
+            f"(gcp) syncToken: {self.source_ranges['syncToken']}",
+            f"(gcp) creationTime: {self.source_ranges['creationTime']}",
         ]
         out_ranges = []
-        for item in self.source_ranges:
-            out_item = {"range": item, "comment": "ipv4 gcp ComputeEngine"}
-            out_ranges.append(out_item)
+        source_prefixes = self.source_ranges["prefixes"]
+
+        for prefix in source_prefixes:
+            if "ipv4Prefix" in prefix:
+                item_prefix = prefix["ipv4Prefix"]
+                iptype = "ipv4"
+            elif "ipv6Prefix" in prefix and not excludeip6:
+                item_prefix = prefix["ipv6Prefix"]
+                iptype = "ipv6"
+
+            item = {
+                "range": item_prefix,
+                "comment": f"{iptype} {prefix['scope']} {prefix['service']}",
+            }
+            out_ranges.append(item)
 
         return {"header_comments": header_comments, "ranges": out_ranges}
