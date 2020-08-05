@@ -2,6 +2,15 @@
 
 A Python3 script to build cloud block lists for servers.
 
+![Last Commit](https://img.shields.io/github/last-commit/0xdade/sephiroth.svg)
+[![Release](https://img.shields.io/github/release/0xdade/sephiroth.svg)](https://github.com/0xdade/sephiroth/releases/latest)
+[![Contributors](https://img.shields.io/github/contributors/0xdade/sephiroth.svg)](https://github.com/0xdade/sephiroth/graphs/contributors)
+[![License](https://img.shields.io/github/license/0xdade/sephiroth?style=flat)](LICENSE)
+[![Docker Downloads](https://img.shields.io/docker/pulls/0xdade/sephiroth?label=docker%20pulls&logo=docker)](https://hub.docker.com/repository/docker/0xdade/sephiroth)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1afce4010968d7133400/maintainability)](https://codeclimate.com/github/0xdade/sephiroth/maintainability)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+
 ## Requirements
 
 * Python 3.8
