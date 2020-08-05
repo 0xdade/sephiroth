@@ -4,7 +4,7 @@ A Python3 script to build cloud block lists for servers.
 
 ## Requirements
 
-* Python 3.6+ (Sephiroth makes use of f-strings)
+* Python 3.8
 
 ## Setup
 

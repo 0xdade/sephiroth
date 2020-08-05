@@ -17,9 +17,9 @@ setuptools.setup(
     packages=["sephiroth", "sephiroth.providers"],
     install_requires=[
         "beautifulsoup4 ~= 4.8.2",
-        "dnspython ~= 1.16.0",
         "requests ~= 2.22.0",
         "Jinja2 ~= 2.11.1",
+        "netaddr~=0.8.0"
     ],
     py_modules=["Sephiroth"],
     include_package_data=True,

@@ -12,7 +12,6 @@ twine = "*"
 
 [packages]
 beautifulsoup4 = "~=4.8.2"
-dnspython = "~=1.16.0"
 requests = "~=2.22.0"
 Jinja2 = "~=2.11.1"
 netaddr = "*"
