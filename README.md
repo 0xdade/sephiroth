@@ -40,11 +40,9 @@ docker run --rm -v $(pwd):/app/output sephiroth -s nginx -t gcp
 Sephiroth provides a built in help menu through the use of Python's argparse library. It tells you which commands are required, as well as other options.
 
 ```bash
-sephiroth on  master [!?] on 🐳 v19.03.8 via sephiroth via 🐍 3.8.3
+sephiroth on  master [!] on 🐳 v19.03.12 via sephiroth via 🐍 3.8.3
 ➜ sephiroth --help
-usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t
-                 {aws,azure,gcp,asn,file,oci,tor} [-a ASN] [-f FILENAME]
-                 [-r REDIR_TARGET] [-p] [--no-ipv6] [-V]
+usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t {aws,azure,gcp,asn,file,oci,tor} [-a ASN] [-f FILENAME] [-r REDIR_TARGET] [-p] [--no-ipv6] [--compacted] [-V]
 
 Sephiroth is made to help block clouds.
 
@@ -60,12 +58,11 @@ optional arguments:
   -r REDIR_TARGET, --redir REDIR_TARGET
                         Place to redirect requests to. (apache)
   -p, --proxy           Using PROXY Protocol? (nginx)
-  --no-ipv6             Exclude ipv6 addresses from the block list where
-                        applicable
+  --no-ipv6             Exclude ipv6 addresses from the block list where applicable
+  --compacted           Compact neighboring cidr ranges. This produces smaller file sizes but loses detail about each range.
   -V, --version         show program's version number and exit
 
-For more information, assistance, or to submit a pull request, please visit
-https://github.com/0xdade/sephiroth.
+For more information, assistance, or to submit a pull request, please visit https://github.com/0xdade/sephiroth.
 ```
 
 ## Example

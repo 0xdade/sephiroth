@@ -20,3 +20,20 @@ class Provider:
 
     def get_processed_ranges(self):
         return self.provider.get_processed_ranges()
+
+    def get_compacted_ranges(self):
+        from netaddr import IPNetwork, IPSet
+
+        processed = self.provider.get_processed_ranges()
+        networks = []
+        for cidr in processed["ranges"]:
+            networks.append(IPNetwork(cidr["range"]))
+        compacted = [
+            {
+                "range": str(cidr),
+                "comment": f"{type(self.provider).__name__.lower()} (compacted)",
+            }
+            for cidr in IPSet(networks).iter_cidrs()
+        ]
+
+        return {"header_comments": processed["header_comments"], "ranges": compacted}

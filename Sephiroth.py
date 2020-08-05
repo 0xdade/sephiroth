@@ -31,7 +31,7 @@ def get_output_path(servertype, targets, build_date):
     return os.path.join(output_dir, fname)
 
 
-def get_ranges(selected_provider, excludeip6=False, targets_in=None):
+def get_ranges(selected_provider, excludeip6=False, targets_in=None, compacted=False):
     """
     Input: Type of provider to target, as defined in supported_targets. 
            Optionally exclude ip6, provide list of asns or files if asn or file target
@@ -41,6 +41,8 @@ def get_ranges(selected_provider, excludeip6=False, targets_in=None):
         provider = Provider(selected_provider, targets_in)
     else:
         provider = Provider(selected_provider)
+    if compacted:
+        return provider.get_compacted_ranges()
     return provider.get_processed_ranges()
 
 
@@ -177,6 +179,13 @@ def parse_args():
         dest="excludeip6",
     )
     parser.add_argument(
+        "--compacted",
+        help="Compact neighboring cidr ranges. This produces smaller file sizes but loses detail about each range.",
+        default=False,
+        action="store_true",
+        dest="compacted",
+    )
+    parser.add_argument(
         "-V", "--version", action="version", version="%(prog)s " + sephiroth.__version__
     )
     return parser.parse_args()
@@ -224,7 +233,9 @@ def main():
                 provider, excludeip6=args.excludeip6, targets_in=args.files
             )
         else:
-            provider_vars = get_ranges(provider, excludeip6=args.excludeip6)
+            provider_vars = get_ranges(
+                provider, excludeip6=args.excludeip6, compacted=args.compacted
+            )
         template_vars["header_comments"] += provider_vars["header_comments"]
         template_vars["ranges"] += provider_vars["ranges"]
     template = get_template(args.servertype)
