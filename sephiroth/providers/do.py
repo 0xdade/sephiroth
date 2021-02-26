@@ -16,6 +16,11 @@ class DO(BaseProvider):
         Output: Dict representation of google.csv from DO
         """
         print("(do) Fetching IP ranges from Digital Ocean")
+        
+        # The URL for this CSV is published on the DO Platform page: 
+        # https://www.digitalocean.com/docs/platform/
+        # They indicate it is updated automatically, but they don't publish a 
+        # definition of the headers or policy regarding its' update or use.
         do_ip_ranges_url = "https://digitalocean.com/geo/google.csv"
         fieldnames = ("prefix", "country", "region", "city", "postalcode")
 
