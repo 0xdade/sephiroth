@@ -16,7 +16,7 @@ class DO(BaseProvider):
         Output: Dict representation of google.csv from DO
         """
         print("(do) Fetching IP ranges from Digital Ocean")
-        
+
         # The URL for this CSV is published on the DO Platform page: 
         # https://www.digitalocean.com/docs/platform/
         # They indicate it is updated automatically, but they don't publish a 
@@ -27,11 +27,7 @@ class DO(BaseProvider):
         r = requests.get(do_ip_ranges_url)
         r.encoding = 'utf-8'
         csvio = io.StringIO(r.text, newline="")
-        data = []
-        for row in DictReader(csvio, fieldnames):
-            data.append(row)
-
-        return data
+        return [row for row in DictReader(csvio, fieldnames)]
 
     def _process_ranges(self, excludeip6=False):
         """

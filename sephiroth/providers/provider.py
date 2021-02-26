@@ -26,9 +26,7 @@ class Provider:
         from netaddr import IPNetwork, IPSet
 
         processed = self.provider.get_processed_ranges()
-        networks = []
-        for cidr in processed["ranges"]:
-            networks.append(IPNetwork(cidr["range"]))
+        networks = [IPNetwork(cidr["range"]) for cidr in processed["ranges"]]
         compacted = [
             {
                 "range": str(cidr),
