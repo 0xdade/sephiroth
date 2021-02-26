@@ -13,7 +13,7 @@ import sephiroth
 
 supported_servers = ["nginx", "apache", "iptables", "ip6tables"]
 
-supported_targets = ["aws", "azure", "gcp", "asn", "file", "oci", "tor"]
+supported_targets = ["aws", "azure", "gcp", "asn", "file", "oci", "tor", "do"]
 
 base_dir = os.path.dirname(__file__)
 template_dir = os.path.join(base_dir, "sephiroth", "templates")
