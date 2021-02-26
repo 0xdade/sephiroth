@@ -42,7 +42,6 @@ class DO(BaseProvider):
             if ":" in prefix['prefix']:
                 iptype = "ipv6"
                 if excludeip6 == True:
-                    print("(do) Skipping IPv6")
                     continue
             else:
                 iptype = "ipv4"
