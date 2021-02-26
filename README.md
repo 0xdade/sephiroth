@@ -59,7 +59,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -s {nginx,apache,iptables,ip6tables}, --server {nginx,apache,iptables,ip6tables}
                         Type of server to build blocklist for
-  -t {aws,azure,gcp,asn,file,oci,tor}, --target {aws,azure,gcp,asn,file,oci,tor}
+  -t {aws,azure,gcp,asn,file,oci,tor,do}, --target {aws,azure,gcp,asn,file,oci,tor,do}
                         Targets to block
   -a ASN, --asn ASN     ASN to block in AS#### format
   -f FILENAME, --file FILENAME
@@ -114,6 +114,7 @@ While Sephiroth began as a cloud blocking script, it became apparent that there 
 * `asn` - Lookup IP ranges by ASN. Uses [Hackertarget](https://hackertarget.com/as-ip-lookup/) API to make fetching results painless. Limited to 100 ASN lookups per day per source IP.
 * `file` - Read line-separated list of addresses from one or more files. Lines that begin with # are ignored and lines that contain a # after the address save the comment into the output.
 * `tor` - Fetch the bulk list of Tor exit nodes from the torproject.org website and add them to the list.
+* `do` - Digital Ocean. Fetched from `google.csv` as documented on the [Platform page](https://www.digitalocean.com/docs/platform/).
 
 ## Acknowledgements
 
