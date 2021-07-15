@@ -13,7 +13,7 @@ class GCP(BaseProvider):
         Output: Dict representation of cloud.json
         """
         print("(gcp) Fetching IP ranges from Google")
-        gcp_ip_ranges_url = "http://www.gstatic.com/ipranges/cloud.json"
+        gcp_ip_ranges_url = "https://www.gstatic.com/ipranges/cloud.json"
         r = requests.get(gcp_ip_ranges_url)
         return r.json()
 
