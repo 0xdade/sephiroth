@@ -16,16 +16,19 @@ setuptools.setup(
     url="https://github.com/0xdade/sephiroth",
     packages=["sephiroth", "sephiroth.providers"],
     install_requires=[
-        "beautifulsoup4 ~= 4.8.2",
-        "requests ~= 2.22.0",
-        "Jinja2 ~= 2.11.1",
-        "netaddr~=0.8.0"
+        "beautifulsoup4 >= 4.8.2",
+        "requests >= 2.22.0",
+        "Jinja2 >= 2.11.1",
+        "netaddr >= 0.8.0"
     ],
     py_modules=["Sephiroth"],
     include_package_data=True,
     entry_points={"console_scripts": ["sephiroth = Sephiroth:main"]},
     classifiers=[
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9"
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",

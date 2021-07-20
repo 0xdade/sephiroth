@@ -4,3 +4,6 @@ dist/
 .venv/
 sephiroth.egg-info/
 MANIFEST.in
+.github/
+.gitignore
+**/*.md

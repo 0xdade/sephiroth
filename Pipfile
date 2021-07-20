@@ -11,10 +11,10 @@ wheel = "*"
 twine = "*"
 
 [packages]
-beautifulsoup4 = "~=4.8.2"
-requests = "~=2.22.0"
-Jinja2 = "~=2.11.3"
-netaddr = "*"
+beautifulsoup4 = ">=4.8.2"
+requests = ">=2.22.0"
+Jinja2 = ">=2.11.3"
+netaddr = ">=0.8.0"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
