@@ -51,7 +51,7 @@ Sephiroth provides a built in help menu through the use of Python's argparse lib
 ```bash
 sephiroth on  master [!] on 🐳 v19.03.12 via sephiroth via 🐍 3.8.3
 ➜ sephiroth --help
-usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t {aws,azure,gcp,asn,file,oci,tor} [-a ASN] [-f FILENAME] [-r REDIR_TARGET] [-p] [--no-ipv6] [--compacted] [-V]
+usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t {aws,azure,gcp,asn,file,oci,tor,do,linode} [-a ASN] [-f FILENAME] [-r REDIR_TARGET] [-p] [--no-ipv6] [--compacted] [-V]
 
 Sephiroth is made to help block clouds.
 
@@ -59,7 +59,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -s {nginx,apache,iptables,ip6tables}, --server {nginx,apache,iptables,ip6tables}
                         Type of server to build blocklist for
-  -t {aws,azure,gcp,asn,file,oci,tor,do}, --target {aws,azure,gcp,asn,file,oci,tor,do}
+  -t {aws,azure,gcp,asn,file,oci,tor,do,linode}, --target {aws,azure,gcp,asn,file,oci,tor,do,linode}
                         Targets to block
   -a ASN, --asn ASN     ASN to block in AS#### format
   -f FILENAME, --file FILENAME
@@ -115,6 +115,7 @@ While Sephiroth began as a cloud blocking script, it became apparent that there 
 * `file` - Read line-separated list of addresses from one or more files. Lines that begin with # are ignored and lines that contain a # after the address save the comment into the output.
 * `tor` - Fetch the bulk list of Tor exit nodes from the [torproject.org website](https://blog.torproject.org/changes-tor-exit-list-service) and add them to the list.
 * `do` - Digital Ocean. Fetched from `google.csv` as documented on the [Platform page](https://www.digitalocean.com/docs/platform/).
+* `linode` - Linode. Fetched from [geoip.linode.com](https://geoip.linode.com)
 
 ## Acknowledgements
 
