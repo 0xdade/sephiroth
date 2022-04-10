@@ -4,8 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "==19.10b0"
-flake8 = "*"
 setuptools = "*"
 wheel = "*"
 twine = "*"
