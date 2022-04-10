@@ -1,4 +1,4 @@
-from sephiroth.providers import AWS, Azure, GCP, OCI, ASN, File, Tor, DO
+from sephiroth.providers import AWS, Azure, GCP, OCI, ASN, File, Tor, DO, Linode
 
 classmap = {
     "aws": AWS,
@@ -9,6 +9,7 @@ classmap = {
     "file": File,
     "tor": Tor,
     "do": DO,
+    "linode": Linode,
 }
 
 

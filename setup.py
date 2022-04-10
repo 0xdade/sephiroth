@@ -16,10 +16,10 @@ setuptools.setup(
     url="https://github.com/0xdade/sephiroth",
     packages=["sephiroth", "sephiroth.providers"],
     install_requires=[
-        "beautifulsoup4 ~= 4.8.2",
-        "requests ~= 2.22.0",
-        "Jinja2 ~= 2.11.1",
-        "netaddr~=0.8.0"
+        "beautifulsoup4 ~= 4.11.1",
+        "requests ~= 2.27.1",
+        "Jinja2 ~= 3.1.1",
+        "netaddr~=0.8.0",
     ],
     py_modules=["Sephiroth"],
     include_package_data=True,

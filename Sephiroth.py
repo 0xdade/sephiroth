@@ -3,17 +3,16 @@
 import argparse
 from datetime import datetime
 import os
+from datetime import timezone
 from pathlib import Path
 
 from jinja2 import Template
-import requests
 
 from sephiroth.providers import Provider
+from sephiroth.providers.provider import classmap as supported_targets
 import sephiroth
 
 supported_servers = ["nginx", "apache", "iptables", "ip6tables"]
-
-supported_targets = ["aws", "azure", "gcp", "asn", "file", "oci", "tor", "do"]
 
 base_dir = os.path.dirname(__file__)
 template_dir = os.path.join(base_dir, "sephiroth", "templates")
@@ -33,7 +32,7 @@ def get_output_path(servertype, targets, build_date):
 
 def get_ranges(selected_provider, excludeip6=False, targets_in=None, compacted=False):
     """
-    Input: Type of provider to target, as defined in supported_targets. 
+    Input: Type of provider to target, as defined in supported_targets.
            Optionally exclude ip6, provide list of asns or files if asn or file target
     Output: Structured data ready to go to templates
     """
@@ -221,7 +220,7 @@ def main():
         raise SystemExit
     if args.servertype in server_validators:
         server_validators[args.servertype](args)
-    build_date = datetime.utcnow()
+    build_date = datetime.now(timezone.utc)
     template_vars = {"header_comments": [], "ranges": []}
     for provider in args.targets:
         if args.asns and provider == "asn":

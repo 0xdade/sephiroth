@@ -1,0 +1,35 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.2.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: debug-statements
+    -   id: mixed-line-ending
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v2.32.0
+    hooks:
+    -   id: pyupgrade
+-   repo: https://github.com/PyCQA/autoflake
+    rev: v1.4
+    hooks:
+    -   id: autoflake
+        args: [
+            --in-place,
+            --remove-all-unused-imports,
+            --ignore-init-module-imports,
+        ]
+-   repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+    -   id: black
+-   repo: https://gitlab.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+    -   id: flake8

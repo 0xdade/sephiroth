@@ -17,4 +17,4 @@ assignees: ''
 
 **Traceback? Logs? Screenshots?**
 
-<Whatever you got, I want em> 
+<Whatever you got, I want em>

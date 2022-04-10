@@ -13,7 +13,7 @@ A Python3 script to build cloud block lists for servers.
 
 ## Requirements
 
-* Python 3.8
+* Python 3.6+
 
 ## Setup
 
@@ -113,7 +113,7 @@ While Sephiroth began as a cloud blocking script, it became apparent that there 
 * `oci` - Oracle Cloud Infrastructure. Fetched via the [documented download process](https://docs.cloud.oracle.com/en-us/iaas/Content/General/Concepts/addressranges.htm)
 * `asn` - Lookup IP ranges by ASN. Uses [Hackertarget](https://hackertarget.com/as-ip-lookup/) API to make fetching results painless. Limited to 100 ASN lookups per day per source IP.
 * `file` - Read line-separated list of addresses from one or more files. Lines that begin with # are ignored and lines that contain a # after the address save the comment into the output.
-* `tor` - Fetch the bulk list of Tor exit nodes from the torproject.org website and add them to the list.
+* `tor` - Fetch the bulk list of Tor exit nodes from the [torproject.org website](https://blog.torproject.org/changes-tor-exit-list-service) and add them to the list.
 * `do` - Digital Ocean. Fetched from `google.csv` as documented on the [Platform page](https://www.digitalocean.com/docs/platform/).
 
 ## Acknowledgements
@@ -126,17 +126,17 @@ These are resources I found while building sephiroth that I thought were quite h
 ## License
 
 ```text
-DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-                    Version 2, December 2004 
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                    Version 2, December 2004
 
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
 
- Everyone is permitted to copy and distribute verbatim or modified 
- copies of this license document, and changing it is allowed as long 
- as the name is changed. 
+ Everyone is permitted to copy and distribute verbatim or modified
+ copies of this license document, and changing it is allowed as long
+ as the name is changed.
 
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION 
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
   0. You just DO WHAT THE FUCK YOU WANT TO.
 ```
