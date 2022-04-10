@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9.6-alpine3.14
 
 LABEL gitrepo="https://github.com/0xdade/sephiroth"
 

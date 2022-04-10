@@ -25,8 +25,10 @@ setuptools.setup(
     include_package_data=True,
     entry_points={"console_scripts": ["sephiroth = Sephiroth:main"]},
     classifiers=[
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.9" "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
 )

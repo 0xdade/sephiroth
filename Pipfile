@@ -17,4 +17,4 @@ Jinja2 = "~=3.1.1"
 netaddr = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
