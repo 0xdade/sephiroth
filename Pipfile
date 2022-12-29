@@ -11,7 +11,7 @@ twine = "*"
 [packages]
 beautifulsoup4 = "~=4.11.1"
 requests = "~=2.27.1"
-Jinja2 = "~=3.1.1"
+Jinja2 = "~=3.1.2"
 netaddr = "*"
 
 [requires]
