@@ -9,7 +9,7 @@ wheel = "*"
 twine = "*"
 
 [packages]
-beautifulsoup4 = "~=4.11.1"
+beautifulsoup4 = "~=4.12.1"
 requests = "~=2.27.1"
 Jinja2 = "~=3.1.1"
 netaddr = "*"
