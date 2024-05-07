@@ -51,15 +51,15 @@ Sephiroth provides a built in help menu through the use of Python's argparse lib
 ```bash
 sephiroth on  master [!] on 🐳 v19.03.12 via sephiroth via 🐍 3.8.3
 ➜ sephiroth --help
-usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t {aws,azure,gcp,asn,file,oci,tor,do,linode} [-a ASN] [-f FILENAME] [-r REDIR_TARGET] [-p] [--no-ipv6] [--compacted] [-V]
+usage: Sephiroth [-h] -s {nginx,apache,iptables,ip6tables} -t {aws,azure,gcp,oci,asn,file,tor,do,linode,cloudflare} [-a ASN] [-f FILENAME] [-r REDIR_TARGET] [-p] [--no-ipv6] [--compacted] [-V]
 
 Sephiroth is made to help block clouds.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -s {nginx,apache,iptables,ip6tables}, --server {nginx,apache,iptables,ip6tables}
                         Type of server to build blocklist for
-  -t {aws,azure,gcp,asn,file,oci,tor,do,linode}, --target {aws,azure,gcp,asn,file,oci,tor,do,linode}
+  -t {aws,azure,gcp,oci,asn,file,tor,do,linode,cloudflare}, --target {aws,azure,gcp,oci,asn,file,tor,do,linode,cloudflare}
                         Targets to block
   -a ASN, --asn ASN     ASN to block in AS#### format
   -f FILENAME, --file FILENAME
@@ -116,6 +116,7 @@ While Sephiroth began as a cloud blocking script, it became apparent that there 
 * `tor` - Fetch the bulk list of Tor exit nodes from the [torproject.org website](https://blog.torproject.org/changes-tor-exit-list-service) and add them to the list.
 * `do` - Digital Ocean. Fetched from `google.csv` as documented on the [Platform page](https://www.digitalocean.com/docs/platform/).
 * `linode` - Linode. Fetched from [geoip.linode.com](https://geoip.linode.com)
+* `cloudflare` - Cloudflare. Fetched from [documented API](https://developers.cloudflare.com/api/operations/cloudflare-i-ps-cloudflare-ip-details)
 
 ## Acknowledgements
 
