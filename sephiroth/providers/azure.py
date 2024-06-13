@@ -12,14 +12,14 @@ class Azure(BaseProvider):
     def _get_ranges(self):
         print("(azure) Fetching IP ranges from Microsoft")
         azure_download_page = (
-            "https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519"
+            "https://www.microsoft.com/en-us/download/details.aspx?id=56519"
         )
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/112.0'
         }
         r = requests.get(azure_download_page, headers = headers)
         soup = BeautifulSoup(r.content, "html.parser")
-        direct_link = soup.select_one(".failoverLink")["href"]
+        direct_link = soup.select_one(".dlcdetail__download-btn")["href"]
         r = requests.get(direct_link)
         return r.json()
 
