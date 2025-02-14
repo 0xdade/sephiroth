@@ -1,5 +1,0 @@
-ipfilter / {
-    rule block
-    {% for range in ranges -%}
-    ip {{ range.range }}
-}
