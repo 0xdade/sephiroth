@@ -1,0 +1,8 @@
+# Built by Sephiroth on {{ build_date }} (UTC)
+{% for comment in header_comments -%}
+# {{ comment }}
+{% endfor %}
+
+{% for range in ranges -%}
+{% if loop.last %}# (For the below line) {{ range.comment + '\n' }}{% endif %} remote_ip {{ range.range }} {% if not loop.last %} # {{ range.comment }}{% endif %}
+{% endfor %}

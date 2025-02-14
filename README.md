@@ -57,7 +57,7 @@ Sephiroth is made to help block clouds.
 
 options:
   -h, --help            show this help message and exit
-  -s {nginx,apache,iptables,ip6tables}, --server {nginx,apache,iptables,ip6tables}
+  -s {nginx,apache,caddy,iptables,ip6tables}, --server {nginx,apache,caddy,iptables,ip6tables}
                         Type of server to build blocklist for
   -t {aws,azure,gcp,oci,asn,file,tor,do,linode,cloudflare}, --target {aws,azure,gcp,oci,asn,file,tor,do,linode,cloudflare}
                         Targets to block
@@ -100,6 +100,7 @@ Then you can use the $block_ip variable in your site config like so:
 
 * `nginx` - Makes use of nginx's `ngx_http_geo_module` which comes with the nginx package in Ubuntu 18.04. Optionally supports the use of `proxy_protocol`, in the event that you are using a PROXY-enabled redirector.
 * `apache` - Generates a mod_rewrite rule set to do conditional redirects based on cloud ip ranges. Does not (to my knowledge) support `proxy_protocol` usage. Requires `-r REDIR_TARGET` for the RewriteRule
+* `caddy` - Generates a list of IP addresses, each prepended with the `remote_ip` request matcher.
 * `iptables` - Generates a set of iptables DROP rules to block access from listed IPv4 ranges.
 * `ip6tables` - Generates a set of ip6tables DROP rules to block access from listed IPv6 ranges.
 

@@ -1,0 +1,34 @@
+In your Caddyfile (or in a separate file that you want to import), define a matcher to block the list of IP addresses:
+    
+    @ip_blocklist {
+        import {{ abspath }}
+    }
+
+Then you can use the request matcher like this:
+
+    route @ip_blocklist {
+        redir https://example.com
+    }
+
+Usage example:
+
+mydomain.com {
+
+    handle * {
+        @ip_blocklist {
+            import {{ abspath }}
+        }
+
+        route @ip_blocklist {
+            redir https://example.com
+        }
+    }
+
+    log {
+        output file access.log {
+            roll true
+            roll_size_mb 10
+            roll_keep 2
+        }
+    }
+}

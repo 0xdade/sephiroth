@@ -12,7 +12,7 @@ from sephiroth.providers import Provider
 from sephiroth.providers.provider import classmap as supported_targets
 import sephiroth
 
-supported_servers = ["nginx", "apache", "iptables", "ip6tables"]
+supported_servers = ["nginx", "apache", "caddy", "iptables", "ip6tables"]
 
 base_dir = os.path.dirname(__file__)
 template_dir = os.path.join(base_dir, "sephiroth", "templates")
@@ -103,6 +103,14 @@ def validate_apache_args(args):
             "[!] Error: Redirect target should not include scheme. Please edit the output RewriteRule directly if you want to change this."
         )
         raise SystemExit
+    return True
+
+
+def validate_caddy_args(args):
+    if args.redir_target:
+        print(
+            "[?] Warning: We cannot generate caddy configs with redirect targets at this time. Ignoring."
+        )
     return True
 
 
@@ -209,6 +217,7 @@ def validate_targets(args):
 server_validators = {
     "apache": validate_apache_args,
     "nginx": validate_nginx_args,
+    "caddy": validate_caddy_args,
     "iptables": validate_iptables_args,
     "ip6tables": validate_ip6tables_args,
 }
