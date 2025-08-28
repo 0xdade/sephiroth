@@ -6,6 +6,7 @@ from sephiroth.providers.azure import Azure
 from sephiroth.providers.cloudflare import Cloudflare
 from sephiroth.providers.do import DO
 from sephiroth.providers.file import File
+from sephiroth.providers.remote_file import RemoteFile
 from sephiroth.providers.gcp import GCP
 from sephiroth.providers.linode import Linode
 from sephiroth.providers.oci import OCI
@@ -19,6 +20,7 @@ classmap = {
     "oci": OCI,
     "asn": ASN,
     "file": File,
+    "remote-file": RemoteFile,
     "tor": Tor,
     "do": DO,
     "linode": Linode,

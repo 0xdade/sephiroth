@@ -163,6 +163,13 @@ def parse_args():
         dest="files",
     )
     parser.add_argument(
+        "-u",
+        "--url",
+        help="Remote file URL(s) for 'remote-file' provider. Use multiple --url for more than one",
+        dest="urls",
+        action="append"
+    )   
+    parser.add_argument(
         "-r",
         "--redir",
         help="Place to redirect requests to. (apache)",
@@ -217,6 +224,9 @@ def validate_targets(args):
                 "[!] Error: Cannot specify -t file without including at least one -f filename.txt"
             )
             success = False
+        elif target == "remote-file" and not args.urls:
+            print( "[!] Error: Must provide at least one --url for 'remote-file' provider" )
+            success = False
     return success
 
 
@@ -231,47 +241,61 @@ server_validators = {
 
 def main():
     args = parse_args()
+
     if not validate_targets(args):
         raise SystemExit
+
     if args.servertype in server_validators:
         server_validators[args.servertype](args)
+
     build_date = datetime.now(timezone.utc)
     template_vars = {"header_comments": [], "ranges": []}
+
+    # Expand _all if used
     if "_all" in args.targets:
-        """
-        _all can't be referenced as a provider because it's a meta target
-        """
-        excluded_from_all = {
-            "_all",
-        }
-        targets = [t for t in supported_targets if t not in excluded_from_all]
+        targets = [t for t in supported_targets if t != "_all"]
     else:
         targets = args.targets
+
     for provider in targets:
-        if args.asns and provider == "asn":
+        provider_vars = None  # default to no output
+
+        if provider == "asn":
+            if not args.asns:
+                continue
             provider_vars = get_ranges(
                 provider, excludeip6=args.excludeip6, targets_in=args.asns
             )
-        elif args.files and provider == "file":
+
+        elif provider == "file":
+            if not args.files:
+                continue
             print(f"{args.files=}")
             provider_vars = get_ranges(
                 provider, excludeip6=args.excludeip6, targets_in=args.files
             )
-        elif provider in {"file", "asn"}:
-            """
-            If provider is file or asn but args.asns or args.files is empty, skip it
-            """
-            continue
+
+        elif provider == "remote-file":
+            if not args.urls:
+                continue
+            provider_vars = get_ranges(
+                provider, excludeip6=args.excludeip6, targets_in=args.urls
+            )
+
         else:
             provider_vars = get_ranges(
                 provider, excludeip6=args.excludeip6, compacted=args.compacted
             )
-        template_vars["header_comments"] += provider_vars["header_comments"]
-        template_vars["ranges"] += provider_vars["ranges"]
+
+        if provider_vars:
+            template_vars["header_comments"] += provider_vars["header_comments"]
+            template_vars["ranges"] += provider_vars["ranges"]
+
     template = get_template(args.servertype)
     template_output = build_template(
         template_vars, template, build_date, args.use_proxy, args.redir_target
     )
+
     outfile = get_output_path(args, build_date)
     with open(outfile, "w") as o:
         o.write(template_output)
