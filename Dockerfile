@@ -1,4 +1,4 @@
-FROM python:3.9.6-alpine3.14
+FROM python:3.10.4-alpine3.14
 
 # Build:
 # docker build --tag=sephiroth .
